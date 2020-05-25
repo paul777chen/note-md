@@ -1,12 +1,12 @@
 # Windows 常用软件
 
-### ① Notepad++
+### 1. Notepad++
 
 下载链接：[Notepad++](https://notepad-plus-plus.org/downloads/)
 
 > 可以视为文本文档编辑器的替代品
 
-### ② Typora
+### 2. Typora
 
 下载链接：[typora-windows](https://typora.io/#windows)
 
@@ -32,17 +32,37 @@
 
 4. 之后双击即可
 
-### ③ shadows-ssr
+### 3. shadows-ssr
 
 下载地址：[shadowsocksr-windows](https://github.com/HMBSbige/ShadowsocksR-Windows/releases)
 
 > 代理工具—与SwitchyOmega搭配使用效果更佳
 
-### ④ github-desktop
+### 4. github-desktop
 
 下载地址：[Github Desktop](https://desktop.github.com/)
 
 > Github桌面版本
 
-### ⑤ CUDA安装
+### 5. CUDA安装
+
+
+
+### 6. 包管理
+
+> 类似利用linux下sudo apt install xxx的方式来按照一些库
+
+利用管理员身份运行powershell
+
+1. 输入：`Get-ExecutionPolicy`，如果显示`Restricted`，则输入`Set-ExecutionPolicy AllSigned`
+
+2. 输入：
+
+   ```
+   Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+   ```
+
+3. 按回车等待安装完成即可
+
+> 以后要安装什么包`choco install xxx`即可
 
