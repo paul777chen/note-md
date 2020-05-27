@@ -110,6 +110,106 @@ c = map(lambda x: x ** 2, filter(lambda x: x % 2 == 0, a))
 
 ## 8. 不要使用含有两个以上表达式的列表推导
 
+- 列表推导支持多级循环，每一级循环也支持多项条件
+- 超过两个表达式的列表推导是很难理解的，应该尽量避免
+
+## 9. 用生成器表达式来改写数据量较大的列表推导
+
+- 当输入的数据量较大时，列表推导可能会因为占用太多内存而出问题
+
+- 由生成器表达式所返回的迭代器，可以逐次产生输出值，从而避免了内存用量问题
+
+  ```python
+  a = [1, 2, 3, 4, 5, 6]  # 假设这是一个非常大的列表推导, a=(x for x in open(xxx))
+  b = (t for t in a)  # 获得的是一个generator
+  next(b)  # 获得1
+  ```
+
+- 把某个生成器表达式所返回的迭代器，放在另一个生成器表达式的for子表达式中，即可将两者组合起来
+
+  ```python
+  c=((x, x*2) for x in b)  # 此时c也是一个generator
+  next(c)  # 获得1,2
+  ```
+
+- 串在一起的生成表达式执行速度很快
+
+## 10. 尽量用enumerate取代range
+
+- enumerate函数提供了一种精简的写法，可以在遍历迭代器时获知每个元素的索引
+- 尽量用enumerate来改写那种将range与下标访问结合的序列遍历代码
+- 可以给enumerate提供第二个参数，以指定开始计数时所用的值（默认为0）
+
+```python
+a = ['a', 'b', 'c']
+for i, v in enumerate(a):
+    print(i, v)  # 输出0,a; 1,b; 2,c
+
+for i, v in enumerate(a, 2):
+    print(i, v)  # 输出2,a; 3,b; 4,c 
+```
+
+## 11. 用zip函数同时遍历两个迭代器
+
+- 内置的zip函数可以平行地遍历多个迭代器
+
+  ```python
+  a = [1, 2, 3]
+  b = ['a', 'b', 'c']
+  for ea, eb in zip(a, b):
+      print(ea, eb)  # 输出1,a; 2,b; 3,c
+  ```
+
+- Python3中的zip相当于生成器，会在遍历过程中逐次产生元组，而Python2中的zip则是直接把这些元组完全生成好，并一次性地返回整份列表
+
+- 如果提供的迭代器长度不等，那么zip就会自动提前终止
+
+  ```python
+  a = [1, 2, 3, 4]
+  b = ['a', 'b', 'c']
+  for ea, eb in zip(a, b):
+      print(ea, eb)  # 输出1,a; 2,b; 3,c --- 而没有4
+  ```
+
+- itertools内置模块中的zip_longest函数可以平行地遍历多个迭代器，而不用在乎它们的长度是否相等
+
+  ```python
+  a = [1, 2, 3, 4]
+  b = ['a', 'b', 'c']
+  for ea, eb in itertools.zip_longest(a, b):
+      print(ea, eb)  # 输出1,a; 2,b; 3,c; 4,None
+  ```
+
+## 12. 不要在for和while循环后面写else块
+
+- Python有种特殊语法，可在for及while循环的内部语句块之后紧跟一个else块
+- 只有当整个循环主体都没遇到break语句时，循环后面的else块才会执行
+- 不要在循环后面使用else块，因为这种语法既不直观，又容易引入误解
+
+## 13. 合理使用try/except/else/finally结构中的每个代码块
+
+- 无论try块是否发生异常，都可以利用try/finally复合语句中的finally块来执行清理工作
+
+  ```python
+  try:
+  	xxxx
+  finally:
+  	xxx   # 无论如何该语句都会被执行
+  ```
+
+- else块可以用来缩减try块中的代码，并把没有发生异常时所要执行的语句与try/except代码块隔开
+
+  ```python
+  try:
+  	xxx
+  except SOMEERROR:
+  	xxx  # 发生特定异常进入此处
+  else:
+  	xxx  # 没有发生异常进入此处
+  ```
+
+- 顺利运行try块后，若想使某些操作能在finally块的清理代码之前执行，则可将这些操作写到else块中
+
 
 
 
