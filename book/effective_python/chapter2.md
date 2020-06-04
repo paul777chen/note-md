@@ -272,3 +272,43 @@
 
 - 对于以动态值作为实际默认值的关键字参数来说，应该把形式上的默认值写为None，并在函数的文档字符串里面描述该默认值所对应的实际行为
 
+## 21. 用只能以关键字形式指定的参数来确保代码清晰
+
+- 关键字参数能够使函数调用的意图更加明确
+
+- 对于各参数之间很容易混淆的函数，可以声明只能以关键字形式指定的参数，以确保调用者必须通过关键字来指定它们。对于接受多个Boolean标志的函数，更应该这样做
+
+- 在编写函数时，Python3有明确的语法来定义这种只能以关键字形式指定的参数
+
+- Python2的函数可以接受`**kwargs`参数，并手工抛出TypeError异常，以便模拟只能以关键字形式来指定的参数
+
+  ```python
+  # Python3
+  # *标志着位置参数就此终结，之后的那些参数，都只能以关键字形式来指定
+  def division(number, divisor, *, ignore_overflow=False):
+      try:
+          return number / divisor
+      except OverflowError:
+          if ignore_overflow:
+              return 0
+          else:
+              raise ValueError('bad')
+  
+  division(10, 20, True)  # 错误！
+  division(10, 20, ignore_overflow=True) # 正确
+  
+  # Python2
+  def division(number, divisor, **kwargs):
+      ignore_overflow = kwargs.pop('ignore_overflow', False)
+      if kwargs:
+          raise TypeError('Unexpected **kwargs: %r' % kwargs)
+      try:
+          return number / divisor
+      except OverflowError:
+          if ignore_overflow:
+              return 0
+          else:
+              raise ValueError('bad')
+  ```
+
+  
